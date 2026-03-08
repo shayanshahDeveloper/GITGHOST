@@ -2,15 +2,6 @@
   <img src="banner.png" alt="GitGhost Banner" width="100%" />
 </p>
 
-<p align="center">
-  <img src="frontend/src/assets/Logo.png" alt="GitGhost Logo" width="80" />
-</p>
-
-<p align="center">
-  A background client that automates your GitHub contribution graph.<br/>
-  Set your schedule, authorize, and it just works.
-</p>
-
 ---
 
 ## What is GitGhost?
