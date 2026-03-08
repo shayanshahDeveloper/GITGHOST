@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-base: #18181b;
+  /* Graphite Pro background */
+  --bg-surface: #27272a;
+  /* Graphite Pro surface */
+  --primary: #a855f7;
+  /* Graphite Pro primary */
+  --text-main: #fafafa;
+  --text-muted: #a1a1aa;
+  --border: #3f3f46;
+}
+
+html,
+body,
+#root {
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-base);
+  color: var(--text-main);
+  /* System font stack */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer components {
+
+  /* Sync Range Input Styling */
+  input[type='range'] {
+    @apply h-1 bg-zinc-700 rounded-sm appearance-none cursor-pointer;
+  }
+
+  input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #fafafa;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 1px solid #3f3f46;
+  }
+}
+
+.input-field {
+  @apply bg-zinc-900 border border-zinc-700 rounded-md focus:ring-1 focus:ring-purple-500 focus:border-purple-500 text-sm w-full placeholder:text-zinc-500 px-3 py-2 text-zinc-100;
+}
+
+.btn-primary {
+  @apply flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-zinc-100 text-zinc-900 text-sm font-medium hover:bg-white transition-colors border border-transparent;
+}
+
+.btn-secondary {
+  @apply flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-zinc-800 text-zinc-100 text-sm font-medium hover:bg-zinc-700 transition-colors border border-zinc-700;
+}
+
+.terminal {
+  @apply flex-1 p-4 font-mono text-sm leading-relaxed overflow-y-auto space-y-2 bg-zinc-950 border-t border-zinc-800 text-zinc-300;
+}
