@@ -51,7 +51,7 @@ const App = () => {
       } catch (e) { console.error("Config fetch failed"); }
 
       const savedToken = localStorage.getItem('gh_pat');
-      if (savedToken) await onLogin(savedToken);
+      if (savedToken) await onLogin(savedToken, true);
 
       const storedPath = localStorage.getItem('git_repo_path');
       if (storedPath) setRepoPath(storedPath);
@@ -128,7 +128,7 @@ const App = () => {
     }]);
   };
 
-  const onLogin = async (token) => {
+  const onLogin = async (token, isAutoLogin = false) => {
     try {
       const resp = await axios.post(`${API_BASE_URL}/github/login`, { token });
       if (!resp.data.hasRepoScope) {
@@ -138,7 +138,9 @@ const App = () => {
       localStorage.setItem('gh_pat', token);
       setShowLogin(false);
       fetchRepos();
-      pendingToast.current = `Welcome back, ${resp.data.user.login}!`;
+      if (!isAutoLogin) {
+        pendingToast.current = `Welcome back, ${resp.data.user.login}!`;
+      }
     } catch (e) {
       toast.error("Invalid or Unauthorized Personal Access Token");
       localStorage.removeItem('gh_pat');
