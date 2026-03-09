@@ -8,7 +8,7 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import HowItWorks from './pages/HowItWorks';
-import PrivacyPolicy from './pages/PrivacyPolicy';
+import PrivacyPolicy from './pages/PrivacyInfo';
 import Disclaimer from './pages/Disclaimer';
 import ContactUs from './pages/ContactUs';
 import Logo from './assets/Logo.png';
