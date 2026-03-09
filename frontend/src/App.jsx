@@ -142,8 +142,8 @@ const App = () => {
   };
 
   const triggerOAuth = () => {
-    if (!clientId || clientId === 'Ov23lijMbqW4GTvb2go9') {
-      alert("GitHub Client ID not configured in backend .env file.");
+    if (!clientId) {
+      alert("GitHub Client ID not configured in backend .env file or backend not reachable.");
       return;
     }
     const scope = 'repo,workflow,user';
