@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import { motion, AnimatePresence } from 'framer-motion';
 import Logo from '../assets/Logo.png';
 
 const Dashboard = ({
@@ -9,6 +10,15 @@ const Dashboard = ({
   commitInterval, setCommitInterval, intervalUnit, setIntervalUnit,
   isPushed, clearLogs, statusLogs, terminalRef, handleCommit
 }) => {
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem('gh_pat');
+    setGithubUser(null);
+    toast.success("Successfully logged out");
+    setShowLogoutModal(false);
+  };
+
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-zinc-900">
       {/* Header */}
@@ -41,7 +51,7 @@ const Dashboard = ({
 
             <div className="size-8 rounded-full overflow-hidden group relative border border-zinc-700">
               <img alt="Profile" className="object-cover w-full h-full" src={githubUser?.avatar_url || "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"} />
-              <button onClick={() => { localStorage.removeItem('gh_pat'); setGithubUser(null); toast.success("Successfully logged out"); }} className="absolute inset-0 bg-zinc-900/80 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity" title="Logout">
+              <button onClick={() => setShowLogoutModal(true)} className="absolute inset-0 bg-zinc-900/80 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity" title="Logout">
                 <span className="material-symbols-outlined text-zinc-100 text-sm">logout</span>
               </button>
             </div>
@@ -391,6 +401,51 @@ const Dashboard = ({
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .material-symbols-outlined { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
       `}</style>
+
+      {/* Logout Confirmation Modal */}
+      <AnimatePresence>
+        {showLogoutModal && (
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              onClick={() => setShowLogoutModal(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative w-full max-w-sm bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl p-6"
+            >
+              <div className="flex flex-col items-center text-center">
+                <div className="size-12 rounded-full bg-red-500/10 flex items-center justify-center mb-4">
+                  <span className="material-symbols-outlined text-red-500 text-2xl">logout</span>
+                </div>
+                <h3 className="text-xl font-semibold text-zinc-100 mb-2">Confirm Logout</h3>
+                <p className="text-zinc-400 text-sm mb-8">
+                  Are you sure you want to log out of GitGhost? You will need to re-authenticate to continue.
+                </p>
+                <div className="flex w-full gap-3">
+                  <button
+                    onClick={() => setShowLogoutModal(false)}
+                    className="flex-1 py-2.5 px-4 rounded-md border border-zinc-700 text-zinc-300 font-medium hover:bg-zinc-800 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="flex-1 py-2.5 px-4 rounded-md bg-red-600 border border-red-500 text-white font-medium hover:bg-red-500 transition-colors"
+                  >
+                    Log Out
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
