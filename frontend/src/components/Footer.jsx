@@ -17,6 +17,7 @@ const Footer = () => {
                 <div className="flex flex-col gap-2">
                     <h4 className="text-zinc-100 font-medium mb-1">Platform</h4>
                     <Link to="/how-it-works" className="text-zinc-400 hover:text-zinc-200 transition-colors">How It Works</Link>
+                    <Link to="/token-guide" className="text-zinc-400 hover:text-zinc-200 transition-colors">Get GitHub Token</Link>
                     <Link to="/login" className="text-zinc-400 hover:text-zinc-200 transition-colors">Console Login</Link>
                     <Link to="/contact" className="text-zinc-400 hover:text-zinc-200 transition-colors">Contact Support</Link>
                 </div>

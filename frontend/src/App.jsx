@@ -11,6 +11,7 @@ import HowItWorks from './pages/HowItWorks';
 import PrivacyPolicy from './pages/PrivacyInfo';
 import Disclaimer from './pages/Disclaimer';
 import ContactUs from './pages/ContactUs';
+import TokenGuide from './pages/TokenGuide';
 import Logo from './assets/Logo.png';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
@@ -261,6 +262,7 @@ const App = () => {
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/disclaimer" element={<Disclaimer />} />
         <Route path="/contact" element={<ContactUs />} />
+        <Route path="/token-guide" element={<TokenGuide />} />
         <Route path="/login" element={
           isInitializing ? renderLoading() :
             githubUser ? <Navigate to="/dashboard" /> : <Login triggerOAuth={triggerOAuth} pat={pat} setPat={setPat} onLogin={onLogin} />
