@@ -41,8 +41,8 @@ GitGhost is a local-first tool that bridges your machine and your GitHub reposit
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/Git-Tool.git
-cd Git-Tool
+git clone https://github.com/shayanshahDeveloper/GITGHOST
+cd GITGHOST
 ```
 
 ### 2. Setup the backend
