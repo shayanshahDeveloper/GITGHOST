@@ -6,7 +6,7 @@ import Landing from './pages/Landing';
 import { HowItWorks, PrivacyPolicy, Disclaimer, ContactUs } from './pages/StaticPages';
 import Logo from './assets/Logo.png';
 
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 const App = () => {
   // --- States ---
@@ -142,7 +142,7 @@ const App = () => {
   };
 
   const triggerOAuth = () => {
-    if (!clientId || clientId === 'YOUR_CLIENT_ID_HERE') {
+    if (!clientId || clientId === 'Ov23lijMbqW4GTvb2go9') {
       alert("GitHub Client ID not configured in backend .env file.");
       return;
     }
