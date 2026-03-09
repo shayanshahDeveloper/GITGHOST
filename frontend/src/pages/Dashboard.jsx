@@ -2,6 +2,15 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { motion, AnimatePresence } from 'framer-motion';
 import Logo from '../assets/Logo.png';
+import Step1 from '../assets/Step 1.png';
+import Step2 from '../assets/Step 2.jpg';
+import Step3 from '../assets/Step 3.jpg';
+import Step4 from '../assets/Step 4.jpg';
+import Step5 from '../assets/Step 5.jpg';
+import Step6 from '../assets/Step 6.jpg';
+import Step7 from '../assets/Step 7.jpg';
+import Step8 from '../assets/Step 8.jpg';
+import ExpandableImage from '../components/ExpandableImage';
 
 const Dashboard = ({
   totalCommits, repos, githubUser, setGithubUser, dashboardPage, setDashboardPage,
@@ -77,6 +86,9 @@ const Dashboard = ({
             </button>
           </nav>
           <div className="mt-auto flex flex-col gap-6 mb-4">
+            <button onClick={() => setDashboardPage('how-it-works')} className={`${dashboardPage === 'how-it-works' ? 'text-zinc-100' : 'text-zinc-500 hover:text-zinc-100'} transition-colors`} title="How It Works">
+              <span className="material-symbols-outlined text-2xl">integration_instructions</span>
+            </button>
             <button onClick={() => setDashboardPage('help')} className={`${dashboardPage === 'help' ? 'text-zinc-100' : 'text-zinc-500 hover:text-zinc-100'} transition-colors`} title="Help">
               <span className="material-symbols-outlined text-2xl">help_outline</span>
             </button>
@@ -391,6 +403,64 @@ const Dashboard = ({
                 </div>
                 <p className="text-sm text-zinc-400">GitGhost uses a classic GitHub Personal Access Token (PAT) with <strong className="text-zinc-300">repo</strong> scope to authenticate. Tokens are stored locally in your browser and can be cleared by logging out.</p>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* How It Works Page */}
+        {dashboardPage === 'how-it-works' && (
+          <div className="flex-1 overflow-auto p-8 custom-scrollbar">
+            <h2 className="text-2xl font-semibold text-zinc-100 mb-6">How It Works</h2>
+            <p className="text-zinc-400 text-sm mb-8">Follow these steps to generate a GitHub Personal Access Token and set up your automated commit pipeline.</p>
+            
+            <div className="space-y-12 max-w-4xl text-zinc-400 text-sm">
+                <div className="flex flex-col gap-3 pb-6 border-b border-zinc-800/50">
+                    <h3 className="text-zinc-100 font-medium text-lg">Step 1: Access GitHub Settings</h3>
+                    <p>Log in to GitHub and navigate to your account settings via the profile dropdown menu in the top right corner.</p>
+                    <ExpandableImage src={Step1} alt="Step 1" />
+                </div>
+
+                <div className="flex flex-col gap-3 pb-6 border-b border-zinc-800/50">
+                    <h3 className="text-zinc-100 font-medium text-lg">Step 2: Developer Settings</h3>
+                    <p>Scroll down to the very bottom of the left sidebar menu and click on <strong className="text-zinc-200">Developer settings</strong>.</p>
+                    <ExpandableImage src={Step2} alt="Step 2" />
+                </div>
+
+                <div className="flex flex-col gap-3 pb-6 border-b border-zinc-800/50">
+                    <h3 className="text-zinc-100 font-medium text-lg">Step 3: Personal Access Tokens</h3>
+                    <p>Inside the Developer settings sidebar, click on the <strong className="text-zinc-200">Personal access tokens</strong> menu to expand it.</p>
+                    <ExpandableImage src={Step3} alt="Step 3" />
+                </div>
+
+                <div className="flex flex-col gap-3 pb-6 border-b border-zinc-800/50">
+                    <h3 className="text-zinc-100 font-medium text-lg">Step 4: Select Classic Tokens</h3>
+                    <p>From the expanded menu options beneath Personal access tokens, select <strong className="text-zinc-200">Tokens (classic)</strong>.</p>
+                    <ExpandableImage src={Step4} alt="Step 4" />
+                </div>
+
+                <div className="flex flex-col gap-3 pb-6 border-b border-zinc-800/50">
+                    <h3 className="text-zinc-100 font-medium text-lg">Step 5: Generate a New Token</h3>
+                    <p>Click the <strong className="text-zinc-200">Generate new token</strong> dropdown button located at the top right of the page.</p>
+                    <ExpandableImage src={Step5} alt="Step 5" />
+                </div>
+
+                <div className="flex flex-col gap-3 pb-6 border-b border-zinc-800/50">
+                    <h3 className="text-zinc-100 font-medium text-lg">Step 6: Choose Classic Format</h3>
+                    <p>From the dropdown prompt, select the <strong className="text-zinc-200">Generate new token (classic)</strong> option for general use.</p>
+                    <ExpandableImage src={Step6} alt="Step 6" />
+                </div>
+
+                <div className="flex flex-col gap-3 pb-6 border-b border-zinc-800/50">
+                    <h3 className="text-zinc-100 font-medium text-lg">Step 7: Configure Token Scopes</h3>
+                    <p>Give your token a recognizable Note (like "GIT-TOOL"). Crucially, scroll down to the scopes section and ensure the <strong className="text-zinc-200">repo</strong> checkbox is selected to grant necessary repository access.</p>
+                    <ExpandableImage src={Step7} alt="Step 7" />
+                </div>
+
+                <div className="flex flex-col gap-3">
+                    <h3 className="text-zinc-100 font-medium text-lg">Step 8: Copy and Paste</h3>
+                    <p>Scroll to the bottom and click "Generate token". Once generated, completely copy your new Personal Access Token and paste it directly into the GitGhost login console to authenticate!</p>
+                    <ExpandableImage src={Step8} alt="Step 8" />
+                </div>
             </div>
           </div>
         )}

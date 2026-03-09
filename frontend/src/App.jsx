@@ -7,7 +7,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-import { HowItWorks, PrivacyPolicy, Disclaimer, ContactUs } from './pages/StaticPages';
+import HowItWorks from './pages/HowItWorks';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Disclaimer from './pages/Disclaimer';
+import ContactUs from './pages/ContactUs';
 import Logo from './assets/Logo.png';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
