@@ -112,9 +112,12 @@ GITGHOST/
 
 ## Screenshots
 
-<p align="center">
-  <img src="frontend/src/assets/Logo.png" alt="GitGhost" width="60" />
-</p>
+<div align="center">
+  <img src="frontend/src/assets/GITGHOST Screenshot 1.png" alt="Dashboard View" width="48%" />
+  <img src="frontend/src/assets/GITGHOST Screenshot 2.png" alt="Repositories View" width="48%" />
+  <img src="frontend/src/assets/GITGHOST Screenshot 3.png" alt="Schedule View" width="48%" />
+  <img src="frontend/src/assets/GITGHOST Screenshot 4.png" alt="Analytics View" width="48%" />
+</div>
 
 ## License
 
