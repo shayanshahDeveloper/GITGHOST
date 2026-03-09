@@ -255,17 +255,7 @@ const App = () => {
         <Route path="/contact" element={<ContactUs />} />
         <Route path="/login" element={
           isInitializing ? renderLoading() :
-            githubUser ? <Navigate to="/dashboard" /> : (
-              <>
-                <button 
-                  onClick={() => toast("Test!")} 
-                  className="fixed top-4 right-4 z-[99999] bg-white text-black p-2"
-                >
-                  TEST TOAST
-                </button>
-                <Login triggerOAuth={triggerOAuth} pat={pat} setPat={setPat} onLogin={onLogin} />
-              </>
-            )
+            githubUser ? <Navigate to="/dashboard" /> : <Login triggerOAuth={triggerOAuth} pat={pat} setPat={setPat} onLogin={onLogin} />
         } />
         <Route path="/dashboard" element={
           isInitializing ? renderLoading() :
