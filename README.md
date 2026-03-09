@@ -113,14 +113,21 @@ GITGHOST/
 ## Screenshots
 
 <div align="center">
-  <img src="frontend/src/assets/GITGHOST Screenshot 1.png" alt="Dashboard View" width="48%" />
-  <img src="frontend/src/assets/GITGHOST Screenshot 2.png" alt="Repositories View" width="48%" />
-  <img src="frontend/src/assets/GITGHOST Screenshot 3.png" alt="Schedule View" width="48%" />
-  <img src="frontend/src/assets/GITGHOST Screenshot 4.png" alt="Analytics View" width="48%" />
-  <img src="frontend/src/assets/GITGHOST Screenshot 5.png" alt="Landing Page" width="48%" />
-  <img src="frontend/src/assets/GITGHOST Screenshot 6.png" alt="Login Page" width="48%" />
-  <img src="frontend/src/assets/GITGHOST Screenshot 7.png" alt="How It Works" width="48%" />
-  <img src="frontend/src/assets/GITSGHOST Screenshot 8.png" alt="Mobile View" width="48%" />
+  <img src="frontend/src/assets/GITGHOST Screenshot 1.png" alt="Dashboard View" width="47%" />
+  &nbsp;
+  <img src="frontend/src/assets/GITGHOST Screenshot 2.png" alt="Repositories View" width="47%" />
+  <br/><br/>
+  <img src="frontend/src/assets/GITGHOST Screenshot 3.png" alt="Schedule View" width="47%" />
+  &nbsp;
+  <img src="frontend/src/assets/GITGHOST Screenshot 4.png" alt="Analytics View" width="47%" />
+  <br/><br/>
+  <img src="frontend/src/assets/GITGHOST Screenshot 5.png" alt="Landing Page" width="47%" />
+  &nbsp;
+  <img src="frontend/src/assets/GITGHOST Screenshot 6.png" alt="Login Page" width="47%" />
+  <br/><br/>
+  <img src="frontend/src/assets/GITGHOST Screenshot 7.png" alt="How It Works" width="47%" />
+  &nbsp;
+  <img src="frontend/src/assets/GITSGHOST Screenshot 8.png" alt="Mobile View" width="47%" />
 </div>
 
 ## License
