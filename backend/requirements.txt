@@ -1,0 +1,6 @@
+# GitGhost Backend - Python Dependencies
+# The Python script (git_sync.py) uses only standard library modules.
+# No third-party packages are required.
+#
+# If future features require additional packages, add them below:
+# example-package==1.0.0

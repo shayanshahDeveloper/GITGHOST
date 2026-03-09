@@ -27,7 +27,7 @@ GitGhost is a local-first tool that bridges your machine and your GitHub reposit
 ## Tech Stack
 
 - **Frontend:** React + Vite + Tailwind CSS
-- **Backend:** Python (FastAPI)
+- **Backend:** Node.js (Express) + Python helper script
 - **Auth:** GitHub OAuth + Personal Access Tokens (classic)
 
 ## Getting Started
@@ -35,7 +35,8 @@ GitGhost is a local-first tool that bridges your machine and your GitHub reposit
 ### Prerequisites
 
 - Node.js (v18+)
-- Python (v3.9+)
+- Python 3 (v3.9+)
+- Git
 - A GitHub account
 
 ### 1. Clone the repository
@@ -49,21 +50,25 @@ cd GITGHOST
 
 ```bash
 cd backend
+npm install
 pip install -r requirements.txt
 ```
 
-Create a `.env` file in the backend directory:
+Create a `.env` file in the `backend/` directory:
 
 ```
 GITHUB_CLIENT_ID=your_client_id
 GITHUB_CLIENT_SECRET=your_client_secret
+GITHUB_REDIRECT_URI=http://localhost:5173
 ```
 
-Start the server:
+Start the backend server:
 
 ```bash
-uvicorn main:app --reload --port 8000
+npm start
 ```
+
+The backend will be running at `http://localhost:8000`.
 
 ### 3. Setup the frontend
 
@@ -86,10 +91,13 @@ The app will be available at `http://localhost:5173`.
 ## Project Structure
 
 ```
-Git-Tool/
-├── backend/              # FastAPI server
-│   ├── main.py
-│   └── requirements.txt
+GITGHOST/
+├── backend/              # Node.js Express server
+│   ├── server.js         # Main API server
+│   ├── git_sync.py       # Python helper for local git operations
+│   ├── package.json      # Node.js dependencies
+│   ├── requirements.txt  # Python dependencies
+│   └── .env              # Environment variables (not committed)
 ├── frontend/             # React + Vite app
 │   ├── src/
 │   │   ├── assets/       # Logo, step screenshots
