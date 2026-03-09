@@ -14,7 +14,7 @@ import ExpandableImage from '../components/ExpandableImage';
 
 const Dashboard = ({
   totalCommits, repos, githubUser, setGithubUser, dashboardPage, setDashboardPage,
-  searchQuery, setSearchQuery, isAutoActive, toggleAuto, filteredRepos,
+  searchQuery, setSearchQuery, repoFilter, setRepoFilter, isAutoActive, toggleAuto, filteredRepos,
   selectedRepo, setSelectedRepo, targetCommits, setTargetCommits,
   commitInterval, setCommitInterval, intervalUnit, setIntervalUnit,
   isPushed, clearLogs, statusLogs, terminalRef, handleCommit
@@ -105,9 +105,19 @@ const Dashboard = ({
                   <input className="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-zinc-500 text-zinc-100" placeholder="Search repositories..." type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                 </div>
                 <div className="flex items-center gap-3 ml-auto">
-                  <button className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-zinc-800 text-zinc-300 text-sm font-medium hover:bg-zinc-700 transition-colors border border-zinc-700">
-                    <span className="material-symbols-outlined text-sm">filter_list</span> Filter
-                  </button>
+                  <div className="relative group hidden sm:block z-20">
+                    <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-zinc-800 text-zinc-300 text-sm font-medium hover:bg-zinc-700 transition-colors border border-zinc-700">
+                      <span className="material-symbols-outlined text-sm">filter_list</span>
+                      {repoFilter === 'all' ? 'All' : repoFilter === 'public' ? 'Public' : 'Private'}
+                    </button>
+                    <div className="absolute right-0 top-full mt-2 w-32 bg-zinc-900 border border-zinc-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                      <div className="flex flex-col p-1">
+                        <button onClick={() => setRepoFilter('all')} className={`text-left px-3 py-2 text-xs rounded-sm hover:bg-zinc-800 ${repoFilter === 'all' ? 'text-white font-medium bg-zinc-800/50' : 'text-zinc-400'}`}>All</button>
+                        <button onClick={() => setRepoFilter('public')} className={`text-left px-3 py-2 text-xs rounded-sm hover:bg-zinc-800 ${repoFilter === 'public' ? 'text-white font-medium bg-zinc-800/50' : 'text-zinc-400'}`}>Public</button>
+                        <button onClick={() => setRepoFilter('private')} className={`text-left px-3 py-2 text-xs rounded-sm hover:bg-zinc-800 ${repoFilter === 'private' ? 'text-white font-medium bg-zinc-800/50' : 'text-zinc-400'}`}>Private</button>
+                      </div>
+                    </div>
+                  </div>
                   <button onClick={toggleAuto} className={`flex items-center gap-1.5 px-4 py-1.5 rounded-md transition-colors text-white text-sm font-medium border ${isAutoActive ? 'bg-red-600 border-red-500 hover:bg-red-500' : 'bg-purple-600 border-purple-500 hover:bg-purple-500'}`}>
                     <span className="material-symbols-outlined text-sm">{isAutoActive ? 'pause' : 'play_arrow'}</span>
                     <span>{isAutoActive ? 'Stop Auto' : 'Start Auto'}</span>

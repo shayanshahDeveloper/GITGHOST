@@ -28,6 +28,7 @@ const App = () => {
   const terminalRef = useRef(null);
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [repoFilter, setRepoFilter] = useState('all');
 
   // --- GitHub API Integration ---
   const [githubUser, setGithubUser] = useState(null);
@@ -216,9 +217,11 @@ const App = () => {
     }
   };
 
-  const filteredRepos = repos.filter(r =>
-    r.full_name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredRepos = repos.filter(r => {
+    const matchesSearch = r.full_name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesFilter = repoFilter === 'all' || r.visibility === repoFilter;
+    return matchesSearch && matchesFilter;
+  });
 
   const toggleAuto = () => setIsAutoActive(!isAutoActive);
   const clearLogs = () => setStatusLogs([]);
@@ -272,6 +275,8 @@ const App = () => {
                 setDashboardPage={setDashboardPage}
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
+                repoFilter={repoFilter}
+                setRepoFilter={setRepoFilter}
                 isAutoActive={isAutoActive}
                 toggleAuto={toggleAuto}
                 filteredRepos={filteredRepos}
