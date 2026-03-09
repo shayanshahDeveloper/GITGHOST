@@ -142,7 +142,9 @@ GITGHOST/
 
 ## License
 
-This project is for personal and educational use. GitGhost is not affiliated with, sponsored by, or endorsed by GitHub, Inc. or Microsoft.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+GitGhost is not affiliated with, sponsored by, or endorsed by GitHub, Inc. or Microsoft.
 
 ---
 
