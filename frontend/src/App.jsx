@@ -42,6 +42,7 @@ const App = () => {
   const oauthProgress = useRef(false);
   const pendingToast = useRef(null);
   const [dashboardPage, setDashboardPage] = useState('dashboard');
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
 
   // --- Effects ---
   useEffect(() => {
@@ -76,6 +77,11 @@ const App = () => {
     };
     init();
   }, []);
+
+  useEffect(() => {
+    document.documentElement.className = theme === 'light' ? 'light' : 'dark';
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   useEffect(() => {
     if (terminalRef.current) {
@@ -230,12 +236,12 @@ const App = () => {
   const clearLogs = () => setStatusLogs([]);
 
   const renderLoading = () => (
-    <div className="flex flex-col h-screen items-center justify-center bg-zinc-950">
+    <div className="flex flex-col h-screen items-center justify-center bg-main">
       <div className="flex items-center justify-center mb-1 animate-pulse">
         <img src={Logo} alt="GitGhost Logo" className="h-14 w-auto drop-shadow-md" />
-        <h1 className="text-3xl font-semibold text-zinc-100 uppercase tracking-widest">GitGhost</h1>
+        <h1 className="text-3xl font-semibold text-main uppercase tracking-widest">GitGhost</h1>
       </div>
-      <h2 className="text-zinc-500 font-medium ml-10 text-sm">Synchronizing access...</h2>
+      <h2 className="text-muted font-medium ml-10 text-sm">Synchronizing access...</h2>
     </div>
   );
 
@@ -251,7 +257,7 @@ const App = () => {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="dark"
+        theme={theme}
       />
       <Routes>
         <Route path="/" element={
@@ -297,6 +303,8 @@ const App = () => {
                 statusLogs={statusLogs}
                 terminalRef={terminalRef}
                 handleCommit={handleCommit}
+                theme={theme}
+                setTheme={setTheme}
               />
             )
         } />

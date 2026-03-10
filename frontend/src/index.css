@@ -3,15 +3,33 @@
 @tailwind utilities;
 
 :root {
-  --bg-base: #18181b;
-  /* Graphite Pro background */
-  --bg-surface: #27272a;
-  /* Graphite Pro surface */
-  --primary: #a855f7;
-  /* Graphite Pro primary */
-  --text-main: #fafafa;
-  --text-muted: #a1a1aa;
-  --border: #3f3f46;
+  --bg-base: #18181b;      /* zinc-950 */
+  --bg-surface: #27272a;   /* zinc-800 */
+  --bg-header: #09090b;    /* zinc-950 deep */
+  --bg-sidebar: #09090b;   /* zinc-950 deep */
+  --bg-input: #18181b;     /* zinc-950 */
+  --bg-card: #09090b;      /* zinc-950 */
+  
+  --primary: #a855f7;      /* purple-500 */
+  --text-main: #fafafa;    /* zinc-50 */
+  --text-muted: #a1a1aa;   /* zinc-400 */
+  --border: #27272a;       /* zinc-800 */
+  --border-muted: #18181b; /* zinc-900 */
+}
+
+:root.light {
+  --bg-base: #f4f4f5;      /* zinc-100 */
+  --bg-surface: #ffffff;   /* white */
+  --bg-header: #ffffff;    /* white */
+  --bg-sidebar: #f4f4f5;   /* zinc-100 */
+  --bg-input: #ffffff;     /* white */
+  --bg-card: #ffffff;      /* white */
+  
+  --primary: #9333ea;      /* purple-600 */
+  --text-main: #09090b;    /* zinc-950 */
+  --text-muted: #71717a;   /* zinc-500 */
+  --border: #e4e4e7;       /* zinc-200 */
+  --border-muted: #f4f4f5; /* zinc-100 */
 }
 
 html,
@@ -23,17 +41,30 @@ body,
   padding: 0;
   background-color: var(--bg-base);
   color: var(--text-main);
-  /* System font stack */
+  transition: background-color 0.3s ease, color 0.3s ease;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.bg-main { background-color: var(--bg-base); }
+.bg-surface { background-color: var(--bg-surface); }
+.bg-header { background-color: var(--bg-header); }
+.bg-card { background-color: var(--bg-card); }
+.text-main { color: var(--text-main); }
+.text-muted { color: var(--text-muted); }
+.border-main { border-color: var(--border); }
+.border-muted { border-color: var(--border-muted); }
 
 @layer components {
 
   /* Sync Range Input Styling */
   input[type='range'] {
     @apply h-1 bg-zinc-700 rounded-sm appearance-none cursor-pointer;
+  }
+
+  .light input[type='range'] {
+    @apply bg-zinc-300;
   }
 
   input[type='range']::-webkit-slider-thumb {
@@ -46,39 +77,66 @@ body,
     border-radius: 50%;
     border: 1px solid #3f3f46;
   }
+  
+  .light input[type='range']::-webkit-slider-thumb {
+    background: #9333ea;
+    border-color: #e4e4e7;
+  }
 }
 
 .input-field {
-  @apply bg-zinc-900 border border-zinc-700 rounded-md focus:ring-1 focus:ring-purple-500 focus:border-purple-500 text-sm w-full placeholder:text-zinc-500 px-3 py-2 text-zinc-100;
+  background-color: var(--bg-input);
+  @apply border border-zinc-700 rounded-md focus:ring-1 focus:ring-purple-500 focus:border-purple-500 text-sm w-full placeholder:text-zinc-500 px-3 py-2;
+  color: var(--text-main);
+}
+
+.light .input-field {
+  @apply border-zinc-300;
 }
 
 .btn-primary {
-  @apply flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-zinc-100 text-zinc-900 text-sm font-medium hover:bg-white transition-colors border border-transparent;
+  @apply flex items-center justify-center gap-2 px-4 py-2 rounded-md transition-colors border border-transparent text-sm font-medium;
+  background-color: var(--text-main);
+  color: var(--bg-base);
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
 }
 
 .btn-secondary {
-  @apply flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-zinc-800 text-zinc-100 text-sm font-medium hover:bg-zinc-700 transition-colors border border-zinc-700;
+  @apply flex items-center justify-center gap-2 px-4 py-2 rounded-md transition-colors border text-sm font-medium;
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  border-color: var(--border);
+}
+
+.btn-secondary:hover {
+  background-color: var(--border);
 }
 
 .terminal {
-  @apply flex-1 p-4 font-mono text-sm leading-relaxed overflow-y-auto space-y-2 bg-zinc-950 border-t border-zinc-800 text-zinc-300;
+  @apply flex-1 p-4 font-mono text-sm leading-relaxed overflow-y-auto space-y-2;
+  background-color: var(--bg-card);
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
 }
 
-/* Custom Scrollbar Styles for Dark Theme */
+/* Custom Scrollbar Styles */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-base); /* zinc-950/900 */
+  background: var(--bg-base);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #3f3f46; /* zinc-700 */
+  background: var(--border);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #52525b; /* zinc-600 */
+  background: var(--text-muted);
 }
