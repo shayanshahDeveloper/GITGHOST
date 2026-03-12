@@ -262,16 +262,16 @@ const App = () => {
       <Routes>
         <Route path="/" element={
           isInitializing ? renderLoading() :
-            githubUser ? <Navigate to="/dashboard" /> : <Landing />
+            githubUser ? <Navigate to="/dashboard" /> : <Landing theme={theme} setTheme={setTheme} />
         } />
-        <Route path="/how-it-works" element={<HowItWorks />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/disclaimer" element={<Disclaimer />} />
-        <Route path="/contact" element={<ContactUs />} />
-        <Route path="/token-guide" element={<TokenGuide />} />
+        <Route path="/how-it-works" element={<HowItWorks theme={theme} setTheme={setTheme} />} />
+        <Route path="/privacy" element={<PrivacyPolicy theme={theme} setTheme={setTheme} />} />
+        <Route path="/disclaimer" element={<Disclaimer theme={theme} setTheme={setTheme} />} />
+        <Route path="/contact" element={<ContactUs theme={theme} setTheme={setTheme} />} />
+        <Route path="/token-guide" element={<TokenGuide theme={theme} setTheme={setTheme} />} />
         <Route path="/login" element={
           isInitializing ? renderLoading() :
-            githubUser ? <Navigate to="/dashboard" /> : <Login triggerOAuth={triggerOAuth} pat={pat} setPat={setPat} onLogin={onLogin} />
+            githubUser ? <Navigate to="/dashboard" /> : <Login triggerOAuth={triggerOAuth} pat={pat} setPat={setPat} onLogin={onLogin} theme={theme} setTheme={setTheme} />
         } />
         <Route path="/dashboard" element={
           isInitializing ? renderLoading() :

@@ -9,25 +9,25 @@ import Avatar2 from "../assets/avatars/avatar2.png";
 import Avatar3 from "../assets/avatars/avatar3.png";
 import Avatar4 from "../assets/avatars/avatar4.png";
 
-const Landing = () => {
+const Landing = ({ theme, setTheme }) => {
     return (
-      <div className="flex flex-col min-h-screen bg-zinc-950 text-zinc-100 font-sans">
-        <Navbar />
+      <div className="flex flex-col min-h-screen bg-main text-main font-sans transition-colors duration-300">
+        <Navbar theme={theme} setTheme={setTheme} />
 
         {/* Hero & Features Wrapper with Unified Background */}
         <div className="relative overflow-hidden">
-          <ParticleBackground />
+          <ParticleBackground theme={theme} />
 
           {/* Hero Section */}
           <section className="relative flex flex-col items-center justify-center py-24 sm:py-32 px-6 sm:px-12 text-center z-10">
             <div className="max-w-3xl mx-auto flex flex-col items-center relative">
-              <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-white mb-6 leading-[1.1]">
+              <h1 className="text-4xl sm:text-7xl font-bold tracking-tight text-main mb-6 leading-[1.1]">
                 Automate your contribution graph
                 <br className="hidden sm:block" />
                 without thinking about it.
               </h1>
 
-              <p className="text-lg sm:text-xl text-zinc-400 max-w-xl mx-auto mb-10 leading-relaxed font-light">
+              <p className="text-lg sm:text-xl text-muted max-w-xl mx-auto mb-10 leading-relaxed font-light">
                 A background client that bridges your local machine and your
                 GitHub repositories. Set your schedule, authorize, and it just
                 works.
@@ -36,13 +36,13 @@ const Landing = () => {
               <div className="flex flex-col sm:flex-row items-center gap-4 justify-center w-full max-w-md mx-auto mb-12">
                 <Link
                   to="/login"
-                  className="w-full sm:w-auto px-8 py-3 rounded-full bg-white text-black font-bold hover:scale-105 transition-all shadow-xl"
+                  className="w-full sm:w-auto px-8 py-3 rounded-full bg-main text-reverse font-bold hover:scale-105 transition-all shadow-xl"
                 >
                   Get Started
                 </Link>
                 <Link
                   to="/how-it-works"
-                  className="w-full sm:w-auto px-8 py-3 rounded-full bg-zinc-900/50 text-white font-semibold hover:bg-zinc-800 transition-all border border-zinc-700 backdrop-blur-sm"
+                  className="w-full sm:w-auto px-8 py-3 rounded-full bg-surface/50 text-main font-semibold hover:bg-surface transition-all border border-main backdrop-blur-sm"
                 >
                   How it works
                 </Link>
@@ -56,16 +56,16 @@ const Landing = () => {
                       key={i}
                       src={avatar}
                       alt="User"
-                      className="size-10 rounded-full border-2 border-zinc-950 object-cover hover:scale-105 transition-transform cursor-pointer"
+                      className="size-10 rounded-full border-2 border-main object-cover hover:scale-105 transition-transform cursor-pointer"
                     />
                   ))}
-                  <div className="size-10 rounded-full bg-zinc-800 border-2 border-zinc-950 flex items-center justify-center text-[10px] font-bold text-zinc-300">
+                  <div className="size-10 rounded-full bg-surface border-2 border-main flex items-center justify-center text-[10px] font-bold text-muted">
                     +5k
                   </div>
                 </div>
-                <p className="text-sm text-zinc-400">
+                <p className="text-sm text-muted">
                   Trusted by over{" "}
-                  <span className="text-zinc-100 font-semibold tracking-tight">
+                  <span className="text-main font-semibold tracking-tight">
                     5,000+ developers
                   </span>{" "}
                   worldwide
@@ -97,9 +97,9 @@ const Landing = () => {
         </div>
 
         {/* How it works strip */}
-        <section className="border-t border-zinc-800 bg-zinc-900">
+        <section className="border-t border-main bg-header">
           <div className="max-w-5xl mx-auto px-6 sm:px-12 py-20">
-            <h2 className="text-2xl font-semibold text-zinc-100 mb-12">
+            <h2 className="text-2xl font-semibold text-main mb-12">
               Setup in three steps
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -147,43 +147,43 @@ const Landing = () => {
                   </tr>
                 </thead>
                 <tbody className="text-zinc-400">
-                  <tr className="border-b border-zinc-800/50">
-                    <td className="py-3 pr-6 text-zinc-300">Setup time</td>
-                    <td className="py-3 px-6">None</td>
-                    <td className="py-3 px-6">15-30 min</td>
-                    <td className="py-3 pl-6 text-zinc-100">2 min</td>
+                  <tr className="border-b border-main/30">
+                    <td className="py-3 pr-6 text-main/80">Setup time</td>
+                    <td className="py-3 px-6 text-muted">None</td>
+                    <td className="py-3 px-6 text-muted">15-30 min</td>
+                    <td className="py-3 pl-6 text-main font-semibold">2 min</td>
                   </tr>
-                  <tr className="border-b border-zinc-800/50">
-                    <td className="py-3 pr-6 text-zinc-300">
+                  <tr className="border-b border-main/30">
+                    <td className="py-3 pr-6 text-main/80">
                       Runs in background
                     </td>
-                    <td className="py-3 px-6">No</td>
-                    <td className="py-3 px-6">Yes</td>
-                    <td className="py-3 pl-6 text-zinc-100">Yes</td>
+                    <td className="py-3 px-6 text-muted">No</td>
+                    <td className="py-3 px-6 text-muted">Yes</td>
+                    <td className="py-3 pl-6 text-main font-semibold">Yes</td>
                   </tr>
-                  <tr className="border-b border-zinc-800/50">
-                    <td className="py-3 pr-6 text-zinc-300">
+                  <tr className="border-b border-main/30">
+                    <td className="py-3 pr-6 text-main/80">
                       Visual dashboard
                     </td>
-                    <td className="py-3 px-6">No</td>
-                    <td className="py-3 px-6">No</td>
-                    <td className="py-3 pl-6 text-zinc-100">Yes</td>
+                    <td className="py-3 px-6 text-muted">No</td>
+                    <td className="py-3 px-6 text-muted">No</td>
+                    <td className="py-3 pl-6 text-main font-semibold">Yes</td>
                   </tr>
-                  <tr className="border-b border-zinc-800/50">
-                    <td className="py-3 pr-6 text-zinc-300">
+                  <tr className="border-b border-main/30">
+                    <td className="py-3 pr-6 text-main/80">
                       Multi-repo support
                     </td>
-                    <td className="py-3 px-6">Manual switching</td>
-                    <td className="py-3 px-6">Per-script</td>
-                    <td className="py-3 pl-6 text-zinc-100">Built in</td>
+                    <td className="py-3 px-6 text-muted">Manual switching</td>
+                    <td className="py-3 px-6 text-muted">Per-script</td>
+                    <td className="py-3 pl-6 text-main font-semibold">Built in</td>
                   </tr>
                   <tr>
-                    <td className="py-3 pr-6 text-zinc-300">
+                    <td className="py-3 pr-6 text-main/80">
                       Adjustable frequency
                     </td>
-                    <td className="py-3 px-6">N/A</td>
-                    <td className="py-3 px-6">Edit crontab</td>
-                    <td className="py-3 pl-6 text-zinc-100">Slider control</td>
+                    <td className="py-3 px-6 text-muted">N/A</td>
+                    <td className="py-3 px-6 text-muted">Edit crontab</td>
+                    <td className="py-3 pl-6 text-main font-semibold">Slider control</td>
                   </tr>
                 </tbody>
               </table>
@@ -192,12 +192,12 @@ const Landing = () => {
         </section>
 
         {/* Capabilities */}
-        <section className="border-t border-zinc-800 bg-zinc-900">
+        <section className="border-t border-main bg-header">
           <div className="max-w-5xl mx-auto px-6 sm:px-12 py-20">
-            <h2 className="text-2xl font-semibold text-zinc-100 mb-10">
+            <h2 className="text-2xl font-semibold text-main mb-10">
               What you get
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-zinc-800 rounded-lg overflow-hidden border border-zinc-800">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-main/20 rounded-lg overflow-hidden border border-main">
               <CapabilityItem
                 icon="terminal"
                 title="Live console"
@@ -238,36 +238,36 @@ const Landing = () => {
 };
 
 const FeatureCard = ({ icon, title, desc }) => (
-  <div className="flex flex-col p-8 rounded-2xl bg-zinc-900/40 border border-zinc-800/50 backdrop-blur-md hover:border-purple-500/50 hover:bg-zinc-900/60 transition-all group active:scale-[0.98]">
+  <div className="flex flex-col p-8 rounded-2xl bg-surface/40 border border-main backdrop-blur-md hover:border-[var(--primary)] hover:bg-surface/60 transition-all group active:scale-[0.98]">
     <div className="size-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-cyan-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-      <span className="material-symbols-outlined text-purple-400 text-2xl">
+      <span className="material-symbols-outlined text-[var(--primary)] text-2xl">
         {icon}
       </span>
     </div>
-    <h3 className="text-lg font-bold text-white mb-3 tracking-tight">
+    <h3 className="text-lg font-bold text-main mb-3 tracking-tight">
       {title}
     </h3>
-    <p className="text-zinc-400 text-sm leading-relaxed font-light">{desc}</p>
+    <p className="text-muted text-sm leading-relaxed font-light">{desc}</p>
   </div>
 );
 
 const StepItem = ({ number, title, desc }) => (
     <div className="flex gap-4">
-        <span className="text-sm font-medium text-zinc-500 mt-0.5 shrink-0">{number}.</span>
+        <span className="text-sm font-medium text-muted mt-0.5 shrink-0">{number}.</span>
         <div>
-            <h3 className="text-sm font-medium text-zinc-100 mb-1">{title}</h3>
-            <p className="text-sm text-zinc-400 leading-relaxed">{desc}</p>
+            <h3 className="text-sm font-medium text-main mb-1">{title}</h3>
+            <p className="text-sm text-muted leading-relaxed">{desc}</p>
         </div>
     </div>
 );
 
 const CapabilityItem = ({ icon, title, desc }) => (
-    <div className="bg-zinc-900 p-6">
+    <div className="bg-header p-6">
         <div className="flex items-center gap-2 mb-2">
-            <span className="material-symbols-outlined text-zinc-400 text-lg">{icon}</span>
-            <h3 className="text-sm font-medium text-zinc-100">{title}</h3>
+            <span className="material-symbols-outlined text-muted text-lg">{icon}</span>
+            <h3 className="text-sm font-medium text-main">{title}</h3>
         </div>
-        <p className="text-sm text-zinc-400 leading-relaxed">{desc}</p>
+        <p className="text-sm text-muted leading-relaxed">{desc}</p>
     </div>
 );
 

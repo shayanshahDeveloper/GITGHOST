@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-const ParticleBackground = () => {
+const ParticleBackground = ({ theme }) => {
     const canvasRef = useRef(null);
     const containerRef = useRef(null);
 
@@ -13,11 +13,16 @@ const ParticleBackground = () => {
         const particleCount = 120;
         const mouse = { x: null, y: null, radius: 250 };
 
-        const colors = [
+        const colors = theme === 'dark' ? [
             'rgba(168, 85, 247, 0.4)', // Purple
             'rgba(34, 211, 238, 0.4)', // Cyan
             'rgba(255, 255, 255, 0.3)', // White
             'rgba(99, 102, 241, 0.4)', // Indigo
+        ] : [
+            'rgba(126, 34, 206, 0.3)', // Darker Purple
+            'rgba(8, 145, 178, 0.3)',  // Darker Cyan
+            'rgba(0, 0, 0, 0.1)',      // Soft Black
+            'rgba(67, 56, 202, 0.3)',  // Darker Indigo
         ];
 
         class Particle {
@@ -35,7 +40,7 @@ const ParticleBackground = () => {
                 this.color = colors[Math.floor(Math.random() * colors.length)];
                 this.velocity = {
                     x: (Math.random() - 0.5) * 1,
-                    y: (Math.random() - 0.5) * 1
+                    y: (Math.random() - 1) * 0.5 // Bias upwards slightly
                 };
             }
 
@@ -48,25 +53,21 @@ const ParticleBackground = () => {
             }
 
             update() {
-                // Natural movement
                 this.x += this.velocity.x;
                 this.y += this.velocity.y;
 
-                // Mouse following "blob" logic
                 if (mouse.x !== null && mouse.y !== null) {
                     let dx = mouse.x - this.x;
                     let dy = mouse.y - this.y;
                     let distance = Math.sqrt(dx * dx + dy * dy);
 
                     if (distance < mouse.radius) {
-                        // Move TOWARDS the cursor
                         let force = (mouse.radius - distance) / mouse.radius;
                         this.x += (dx / distance) * force * 5;
                         this.y += (dy / distance) * force * 5;
                     }
                 }
 
-                // Wrap around logic
                 if (this.x < 0) this.x = canvas.width;
                 if (this.x > canvas.width) this.x = 0;
                 if (this.y < 0) this.y = canvas.height;
@@ -84,14 +85,15 @@ const ParticleBackground = () => {
         const animate = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Draw Cursor Blob Glow
             if (mouse.x !== null && mouse.y !== null) {
                 const gradient = ctx.createRadialGradient(
                     mouse.x, mouse.y, 0,
                     mouse.x, mouse.y, mouse.radius
                 );
-                gradient.addColorStop(0, 'rgba(168, 85, 247, 0.15)');
-                gradient.addColorStop(0.5, 'rgba(34, 211, 238, 0.05)');
+                
+                const glowColor = theme === 'dark' ? 'rgba(168, 85, 247,' : 'rgba(147, 51, 234,';
+                gradient.addColorStop(0, `${glowColor} 0.15)`);
+                gradient.addColorStop(0.5, `${glowColor} 0.05)`);
                 gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
                 
                 ctx.fillStyle = gradient;
@@ -105,7 +107,6 @@ const ParticleBackground = () => {
                 p.update();
             });
             
-            // Draw Neural Connections
             for (let a = 0; a < particles.length; a++) {
                 for (let b = a; b < particles.length; b++) {
                     let dx = particles[a].x - particles[b].x;
@@ -113,7 +114,9 @@ const ParticleBackground = () => {
                     let distance = Math.sqrt(dx * dx + dy * dy);
 
                     if (distance < 80) {
-                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - distance / 80)})`;
+                        const opacity = theme === 'dark' ? 0.1 : 0.05;
+                        const strokeColor = theme === 'dark' ? '255, 255, 255' : '147, 51, 234';
+                        ctx.strokeStyle = `rgba(${strokeColor}, ${opacity * (1 - distance / 80)})`;
                         ctx.lineWidth = 0.5;
                         ctx.beginPath();
                         ctx.moveTo(particles[a].x, particles[a].y);
@@ -160,7 +163,7 @@ const ParticleBackground = () => {
             window.removeEventListener('mouseout', handleMouseOut);
             cancelAnimationFrame(animationFrameId);
         };
-    }, []);
+    }, [theme]); // Re-run when theme changes
 
     return (
         <div ref={containerRef} className="absolute inset-0 -z-0 pointer-events-none overflow-hidden opacity-70">
