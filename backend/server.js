@@ -150,6 +150,102 @@ app.post('/commit-api', async (req, res) => {
     }
 });
 
+// --- DATED COMMIT (Custom date via Git Data API) ---
+app.post('/commit-api-dated', async (req, res) => {
+    const { owner, repo, branch = 'main', customDate } = req.body;
+    if (!githubToken) return res.status(401).json({ status: 'error', detail: 'GitHub not connected' });
+    if (!customDate) return res.status(400).json({ status: 'error', detail: 'customDate is required' });
+
+    const timestamp = new Date().toLocaleTimeString();
+    const octokit = new Octokit({ auth: githubToken });
+    const logPath = 'github_contribution_log.txt';
+    const commitMsg = [
+        "Feat: automated pulse update",
+        "Chore: contribute to graph",
+        "Refactor: background sync logic",
+        "Docs: update development logs",
+        "Style: refine contribution markers"
+    ][Math.floor(Math.random() * 5)];
+
+    try {
+        // 0. Get the authenticated user's info for proper attribution
+        const { data: userData } = await octokit.rest.users.getAuthenticated();
+        const authorName = userData.name || userData.login;
+        // Use GitHub's noreply email so it links to the user's contribution graph
+        const authorEmail = `${userData.id}+${userData.login}@users.noreply.github.com`;
+
+        // 1. Get reference (latest commit SHA on branch)
+        const { data: refData } = await octokit.git.getRef({ owner, repo, ref: `heads/${branch}` });
+        const latestCommitSha = refData.object.sha;
+
+        // 2. Get the commit to find its tree SHA
+        const { data: commitData } = await octokit.git.getCommit({ owner, repo, commit_sha: latestCommitSha });
+        const treeSha = commitData.tree.sha;
+
+        // 3. Get existing file content (or create new)
+        let existingContent = '';
+        try {
+            const { data } = await octokit.repos.getContent({ owner, repo, path: logPath, ref: branch });
+            existingContent = Buffer.from(data.content, 'base64').toString();
+        } catch (e) { /* File doesn't exist yet, start fresh */ }
+
+        const newContent = existingContent + `Contribution on ${customDate}\n`;
+
+        // 4. Create a new blob with the updated content
+        const { data: blobData } = await octokit.git.createBlob({
+            owner, repo,
+            content: Buffer.from(newContent).toString('base64'),
+            encoding: 'base64'
+        });
+
+        // 5. Create a new tree with our new blob
+        const { data: newTree } = await octokit.git.createTree({
+            owner, repo,
+            base_tree: treeSha,
+            tree: [{
+                path: logPath,
+                mode: '100644',
+                type: 'blob',
+                sha: blobData.sha
+            }]
+        });
+
+        // 6. Create a commit with the custom date + real user identity
+        const dateISO = new Date(customDate).toISOString();
+        const { data: newCommit } = await octokit.git.createCommit({
+            owner, repo,
+            message: commitMsg,
+            tree: newTree.sha,
+            parents: [latestCommitSha],
+            author: {
+                name: authorName,
+                email: authorEmail,
+                date: dateISO
+            },
+            committer: {
+                name: authorName,
+                email: authorEmail,
+                date: dateISO
+            }
+        });
+
+        // 7. Update the branch reference (this IS the push to origin/main)
+        await octokit.git.updateRef({
+            owner, repo,
+            ref: `heads/${branch}`,
+            sha: newCommit.sha
+        });
+
+        const log = { timestamp, success: true, message: `[DATED] Pushed to ${owner}/${repo} (${branch}) on ${customDate} as ${authorName}` };
+        terminalLogs.push(log);
+        res.json({ status: 'success', log });
+    } catch (err) {
+        const log = { timestamp, success: false, message: `Dated Commit Error: ${err.message}` };
+        terminalLogs.push(log);
+        res.status(500).json({ status: 'error', log });
+    }
+});
+
 // --- LEGACY/LOCAL HELPERS ---
 app.get('/logs', (req, res) => {
     res.json({ logs: terminalLogs.slice(-10) });

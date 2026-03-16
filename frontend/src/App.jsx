@@ -226,6 +226,31 @@ const App = () => {
     }
   };
 
+  const handleDatedCommit = async (targetRepo, customDate) => {
+    if (!githubUser || !targetRepo || !customDate) {
+      addLog("Missing target repo or date for dated commit", false);
+      return false;
+    }
+    setIsPushed(true);
+    try {
+      const resp = await axios.post(`${API_BASE_URL}/commit-api-dated`, {
+        owner: targetRepo.owner.login,
+        repo: targetRepo.name,
+        branch: targetRepo.default_branch,
+        customDate
+      });
+      const logData = resp.data.log;
+      setStatusLogs(prev => [...prev, { ...logData, id: Date.now() }]);
+      if (resp.data.status === 'success') setTotalCommits(prev => prev + 1);
+      return true;
+    } catch (e) {
+      addLog(e.response?.data?.log?.message || "Dated commit failed", false);
+      return false;
+    } finally {
+      setIsPushed(false);
+    }
+  };
+
   const filteredRepos = repos.filter(r => {
     const matchesSearch = r.full_name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter = repoFilter === 'all' || r.visibility === repoFilter;
@@ -303,6 +328,7 @@ const App = () => {
                 statusLogs={statusLogs}
                 terminalRef={terminalRef}
                 handleCommit={handleCommit}
+                handleDatedCommit={handleDatedCommit}
                 theme={theme}
                 setTheme={setTheme}
               />

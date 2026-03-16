@@ -10,9 +10,13 @@ const Dashboard = ({
   selectedRepo, setSelectedRepo, targetCommits, setTargetCommits,
   commitInterval, setCommitInterval, intervalUnit, setIntervalUnit,
   isPushed, clearLogs, statusLogs, terminalRef, handleCommit,
-  theme, setTheme
+  handleDatedCommit, theme, setTheme
 }) => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [customDate, setCustomDate] = useState('');
+  const [customTime, setCustomTime] = useState('10:30');
+  const [datedCommitCount, setDatedCommitCount] = useState(1);
+  const [isDatedCommitting, setIsDatedCommitting] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem('gh_pat');
@@ -47,7 +51,7 @@ const Dashboard = ({
           <div className="hidden sm:block h-6 w-px bg-[var(--border)] mx-2"></div>
 
           <div className="flex items-center gap-4">
-            <button 
+            <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               className="text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors p-1.5 rounded-lg hover:bg-[var(--bg-surface)]"
               title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
@@ -202,6 +206,116 @@ const Dashboard = ({
                   />
                 </div>
               </div>
+
+              {/* Time Travel Commit - Main Dashboard */}
+              {selectedRepo && (
+                <div className="p-5 bg-header border-t border-main shrink-0">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="material-symbols-outlined text-[var(--primary)] text-lg">history</span>
+                    <h3 className="text-xs font-bold text-main uppercase tracking-wider">Time Travel Commit</h3>
+                    <span className="text-[9px] text-muted ml-auto hidden sm:block">
+                      {targetCommits} commit(s) • {commitInterval}{intervalUnit} interval → <span className="text-[var(--primary)] font-bold">{selectedRepo.default_branch}</span>
+                    </span>
+                  </div>
+                  <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-end">
+                    <div className="flex-1 min-w-0">
+                      <label className="text-[10px] font-bold text-muted uppercase tracking-wider mb-1 block">Date</label>
+                      <input
+                        type="date"
+                        value={customDate}
+                        onChange={(e) => setCustomDate(e.target.value)}
+                        className="w-full bg-surface border border-main rounded-md px-2.5 py-2 text-xs text-main focus:outline-none focus:ring-1 focus:ring-[var(--primary)] transition-all"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <label className="text-[10px] font-bold text-muted uppercase tracking-wider mb-1 block">Time</label>
+                      <input
+                        type="time"
+                        value={customTime}
+                        onChange={(e) => setCustomTime(e.target.value)}
+                        className="w-full bg-surface border border-main rounded-md px-2.5 py-2 text-xs text-main focus:outline-none focus:ring-1 focus:ring-[var(--primary)] transition-all"
+                      />
+                    </div>
+                    <button
+                      disabled={!customDate || isPushed || isDatedCommitting}
+                      onClick={async () => {
+                        if (!selectedRepo || !customDate) return;
+                        setIsDatedCommitting(true);
+                        const delayMs = intervalUnit === 'min' ? commitInterval * 60000 : commitInterval * 1000;
+                        const MAX_RETRIES = 5;
+
+                        // Helper: check if internet is available
+                        const checkInternet = async () => {
+                          try {
+                            await fetch('https://api.github.com', { method: 'HEAD', mode: 'no-cors' });
+                            return true;
+                          } catch { return false; }
+                        };
+
+                        // Helper: wait for internet to come back
+                        const waitForInternet = async () => {
+                          toast.warning('No internet connection. Waiting to reconnect...');
+                          while (true) {
+                            await new Promise(r => setTimeout(r, 3000));
+                            if (await checkInternet()) {
+                              toast.info('Internet restored. Resuming commits...');
+                              return;
+                            }
+                          }
+                        };
+
+                        let successCount = 0;
+
+                        while (successCount < targetCommits) {
+                          // Check internet before each commit
+                          if (!(await checkInternet())) {
+                            await waitForInternet();
+                          }
+
+                          const offsetHr = String(Math.floor(Math.random() * 23)).padStart(2, '0');
+                          const offsetMin = String(Math.floor(Math.random() * 59)).padStart(2, '0');
+                          const offsetSec = String(Math.floor(Math.random() * 59)).padStart(2, '0');
+                          const commitDate = `${customDate} ${offsetHr}:${offsetMin}:${offsetSec}`;
+
+                          let success = false;
+                          for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+                            success = await handleDatedCommit(selectedRepo, commitDate);
+                            if (success) break;
+
+                            // Failed — check internet, wait if needed, then retry
+                            if (!(await checkInternet())) {
+                              await waitForInternet();
+                            }
+                            toast.warning(`Commit failed. Retrying (${attempt}/${MAX_RETRIES})...`);
+                            await new Promise(r => setTimeout(r, 2000));
+                          }
+
+                          if (success) {
+                            successCount++;
+                          } else {
+                            toast.error(`Commit failed after ${MAX_RETRIES} retries. Skipping and continuing...`);
+                          }
+
+                          // Wait for the interval between commits (skip after last one)
+                          if (successCount < targetCommits) {
+                            await new Promise(resolve => setTimeout(resolve, delayMs));
+                          }
+                        }
+
+                        setIsDatedCommitting(false);
+                        toast.success(`${successCount}/${targetCommits} commit(s) placed on ${customDate} → pushed to ${selectedRepo.default_branch}`);
+                      }}
+                      className="shrink-0 btn-primary px-4 py-2 rounded-md text-xs font-bold uppercase transition-all shadow-sm active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5"
+                    >
+                      {isDatedCommitting ? (
+                        <><span className="animate-spin text-xs">⏳</span> Working...</>
+                      ) : (
+                        <><span className="material-symbols-outlined text-sm">schedule_send</span> Time Travel</>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              )}
             </section>
 
             {/* Console Section */}
@@ -213,7 +327,7 @@ const Dashboard = ({
                 </div>
                 <div className="flex gap-4 items-center">
                   <div className="hidden sm:flex items-center gap-2">
-                     <span className={`size-2 rounded-full ${isPushed ? 'bg-green-500' : 'bg-muted opacity-40'}`}></span>
+                    <span className={`size-2 rounded-full ${isPushed ? 'bg-green-500' : 'bg-muted opacity-40'}`}></span>
                     <span className="text-xs text-muted font-mono">{isPushed ? 'Active' : 'Idle'}</span>
                   </div>
                   <button onClick={clearLogs} className="text-muted hover:text-main transition-colors">
@@ -329,6 +443,81 @@ const Dashboard = ({
                   <button onClick={() => { setTargetCommits(20); setCommitInterval(1); setIntervalUnit('min'); }} className="w-full text-left px-4 py-3 bg-surface border border-main rounded-md text-sm text-main hover:bg-header hover:border-[var(--primary)] transition-all">🔴 Heavy — 20 commits / 1 min</button>
                 </div>
               </div>
+            </div>
+
+            {/* Time Travel Commit Section */}
+            <div className="mt-6 bg-card border border-main rounded-lg p-6 shadow-sm">
+              <div className="flex items-center gap-3 mb-2">
+                <span className="material-symbols-outlined text-[var(--primary)]">history</span>
+                <h3 className="text-sm font-medium text-main">Time Travel Commit</h3>
+              </div>
+              <p className="text-xs text-muted mb-6">Select a specific date and time to place commits on your contribution graph. Commits will appear as if they were made on that exact date.</p>
+
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-muted uppercase tracking-wider">Date</label>
+                  <input
+                    type="date"
+                    value={customDate}
+                    onChange={(e) => setCustomDate(e.target.value)}
+                    className="w-full bg-surface border border-main rounded-lg px-3 py-2.5 text-sm text-main focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-all"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-muted uppercase tracking-wider">Time</label>
+                  <input
+                    type="time"
+                    value={customTime}
+                    onChange={(e) => setCustomTime(e.target.value)}
+                    className="w-full bg-surface border border-main rounded-lg px-3 py-2.5 text-sm text-main focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-all"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-muted uppercase tracking-wider">Commits</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      min="1"
+                      max="50"
+                      value={datedCommitCount}
+                      onChange={(e) => setDatedCommitCount(Math.max(1, Math.min(50, parseInt(e.target.value) || 1)))}
+                      className="w-full bg-surface border border-main rounded-lg px-3 py-2.5 text-sm text-main focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-all"
+                    />
+                  </div>
+                </div>
+                <button
+                  disabled={!selectedRepo || !customDate || isPushed || isDatedCommitting}
+                  onClick={async () => {
+                    if (!selectedRepo || !customDate) return;
+                    setIsDatedCommitting(true);
+                    const fullDate = `${customDate} ${customTime}:00`;
+                    for (let i = 0; i < datedCommitCount; i++) {
+                      // Add slight random time offset to each commit so they're unique
+                      const offsetMin = Math.floor(Math.random() * 59);
+                      const offsetSec = Math.floor(Math.random() * 59);
+                      const [datePart] = fullDate.split(' ');
+                      const commitDate = `${datePart} ${String(Math.floor(Math.random() * 23)).padStart(2, '0')}:${String(offsetMin).padStart(2, '0')}:${String(offsetSec).padStart(2, '0')}`;
+                      await handleDatedCommit(selectedRepo, commitDate);
+                    }
+                    setIsDatedCommitting(false);
+                    toast.success(`${datedCommitCount} commit(s) placed on ${customDate}`);
+                  }}
+                  className="btn-primary px-4 py-2.5 rounded-lg text-sm font-bold transition-all shadow-md hover:scale-[1.02] active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                >
+                  {isDatedCommitting ? (
+                    <><span className="animate-spin">⏳</span> Committing...</>
+                  ) : (
+                    <><span className="material-symbols-outlined text-base">schedule_send</span> Time Travel</>
+                  )}
+                </button>
+              </div>
+
+              {!selectedRepo && (
+                <p className="text-xs text-red-400 mt-3 flex items-center gap-1">
+                  <span className="material-symbols-outlined text-xs">warning</span>
+                  Select a repository from the main dashboard first.
+                </p>
+              )}
             </div>
           </div>
         )}
